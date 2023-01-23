@@ -10,6 +10,7 @@ npm-debug.*
 *.orig.*
 web-build/
 coverage/
+lecture-materials
 
 # macOS
 .DS_Store
