@@ -4619,6 +4619,11 @@ fbjs@^3.0.0, fbjs@^3.0.4:
     setimmediate "^1.0.5"
     ua-parser-js "^0.7.30"
 
+fetch-lean@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/fetch-lean/-/fetch-lean-1.0.5.tgz#249ae54e8a686aaeb15320be8dd2ca683465b05f"
+  integrity sha512-QTNZCzh+Rr4QnrkUDueIwIANQ73oMZp0gSkz36F0RhHzfBw+1VImFy7YU8fYYZ4TzhrbL+cDEUWkQoye/BJT4w==
+
 fetch-retry@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/fetch-retry/-/fetch-retry-4.1.1.tgz#fafe0bb22b54f4d0a9c788dff6dd7f8673ca63f3"

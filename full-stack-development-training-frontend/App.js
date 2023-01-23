@@ -1,11 +1,23 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Platform } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
+import fetchLean from 'fetch-lean';
 
 export default function App() {
 
 	const [text, setText] = React.useState('');
 	const [password, setPassword] = React.useState('');
+
+	const submitLoginRequest = async () => {
+		console.log(`Check Button Pressed with parameters:\nEmail: ${text}\nPassword: ${password}`);
+		const dataToPost = {
+			email: text,
+			password: password,
+		}
+		let backendHost = (Platform.OS === 'android') ? '10.0.2.2' : 'localhost';
+		let postResp = await fetchLean('POST', `http://${backendHost}:8080/loginViaEmail`, {}, dataToPost, false);
+		console.log(`postResp:\n${JSON.stringify(postResp, null, 2)}`, true);
+	}
 
 	return (
 		<View style={styles.container}>
@@ -28,7 +40,7 @@ export default function App() {
 			/>
 			<Button
 				mode="contained"
-				onPress={() => console.log(`Check Button Pressed with parameters:\nEmail: ${text}\nPassword: ${password}`)}
+				onPress={submitLoginRequest}
 			>
 				Check
 			</Button>
@@ -45,6 +57,8 @@ const styles = StyleSheet.create({
 	},
 	textBox:{
 		width: '80%',
-		height: 30,
+		height: 50,
+		paddingVertical: 5,
+		paddingBottom: 10,
 	},
 });

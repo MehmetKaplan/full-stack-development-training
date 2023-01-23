@@ -17,8 +17,9 @@ const init = (props) => new Promise(async (resolve, reject) => {
 	}
 });
 
-const checkUser = (email, password) => new Promise(async (resolve, reject) => {
+const checkUser = (emailFromRequest, password) => new Promise(async (resolve, reject) => {
 	try {
+		let email = emailFromRequest.toLowerCase().trim();
 		const result = await runSQL(poolName, 'select * from users where email = $1', [email]);
 		if (result?.rows?.length === 0) {
 			return resolve({
