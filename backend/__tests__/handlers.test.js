@@ -23,7 +23,7 @@ beforeAll(async () => {
 	);
 });
 
-// test createUser function
+/*
 test('createUser', async () => {
 	let now = Date.now();
 	let email = `${now}@yopmail.com`;
@@ -50,4 +50,22 @@ test('user already exists', async () => {
 		"result": "ERROR",
 		"payload": "userAlreadyExists"
 	});
+});
+*/
+test('checkUser', async () => {
+	let now = Date.now();
+	let email = `${now}@yopmail.com`;
+	let name = `${now}`;
+	let password = `${now}`;
+	let result = await createUser(email, password, name);
+	tickLog.info(`createUser returned:\n${JSON.stringify(result, null, 2)}`, true);
+	let result2 = await checkUser(email, password);
+	tickLog.info(`checkUser returned:\n${JSON.stringify(result2, null, 2)}`, true);
+	expect(result2.payload).toEqual('Authenticated');
+	let result3 = await checkUser(email, 'WRONG-PASSWORD');
+	tickLog.info(`checkUser returned:\n${JSON.stringify(result3, null, 2)}`, true);
+	expect(result3.payload).toEqual('passwordError');
+	let result4 = await checkUser('NOT-EXISTING-USER@yopmail.com', 'WRONG-PASSWORD');
+	tickLog.info(`checkUser returned:\n${JSON.stringify(result4, null, 2)}`, true);
+	expect(result4.payload).toEqual('userNotFound');
 });

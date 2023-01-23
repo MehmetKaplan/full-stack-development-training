@@ -17,16 +17,37 @@ const init = (props) => new Promise(async (resolve, reject) => {
 	}
 });
 
-async function checkUser(email, password) {
-	const hash = await bcrypt.hash(password, keys.bcryptKeys.saltRounds);
-	const result = await runSQL(poolName, 'select * from users where email = $1 and password = $2', [email, password]);
-	tickLog.success(`checkUser returned rows:\n${JSON.stringify(result.rows, null, 2)}`, true);
-}
+const checkUser = (email, password) => new Promise(async (resolve, reject) => {
+	try {
+		const result = await runSQL(poolName, 'select * from users where email = $1', [email]);
+		if (result?.rows?.length === 0) {
+			return resolve({
+				result: 'ERROR',
+				payload: 'userNotFound',
+			});
+		};
+		let compareResult = await bcrypt.compare(password, result.rows[0].password);
+		tickLog.success(`compareResult: ${compareResult}`);
+		if (compareResult) {
+			return resolve({
+				result: 'OK',
+				payload: 'Authenticated',
+			});
+		}
+		return resolve({
+			result: 'ERROR',
+			payload: 'passwordError',
+		});
+	} catch (error) {
+		return reject(error);
+	}
+});
 
 const createUser = (emailFromRequest, password, name) => new Promise(async (resolve, reject) => {
 	try {
 		let email = emailFromRequest.toLowerCase().trim();
 		const hash = await bcrypt.hash(password, keys.bcryptKeys.saltRounds);
+		tickLog.error(`createUser hash: ${hash}, password: ${password}, saltRounds: ${keys.bcryptKeys.saltRounds}`, true);
 		const checkUserExists = await runSQL(poolName, 'select * from users where email = $1', [email]);
 		if (checkUserExists.rows.length > 0) {
 			return resolve({
