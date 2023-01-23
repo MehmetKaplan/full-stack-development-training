@@ -56,6 +56,7 @@ const createUser = (emailFromRequest, password, name) => new Promise(async (reso
 			});
 		}
 		const result = await runSQL(poolName, 'insert into users (email, name, password) values ($1, $2, $3) returning *', [email, name, hash]);
+		result.rows[0].password = '***';
 		return resolve({
 			result: 'OK',
 			payload: result.rows,
