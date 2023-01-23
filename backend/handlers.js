@@ -23,11 +23,18 @@ async function checkUser(email, password) {
 	tickLog.success(`checkUser returned rows:\n${JSON.stringify(result.rows, null, 2)}`, true);
 }
 
-const createUser = (email, password, name) => new Promise(async (resolve, reject) => {
+const createUser = (emailFromRequest, password, name) => new Promise(async (resolve, reject) => {
 	try {
+		let email = emailFromRequest.toLowerCase().trim();
 		const hash = await bcrypt.hash(password, keys.bcryptKeys.saltRounds);
+		const checkUserExists = await runSQL(poolName, 'select * from users where email = $1', [email]);
+		if (checkUserExists.rows.length > 0) {
+			return resolve({
+				result: 'ERROR',
+				payload: "userAlreadyExists",
+			});
+		}
 		const result = await runSQL(poolName, 'insert into users (email, name, password) values ($1, $2, $3) returning *', [email, name, hash]);
-		tickLog.success(`createUser returned rows:\n${JSON.stringify(result.rows, null, 2)}`, true);
 		return resolve({
 			result: 'OK',
 			payload: result.rows,

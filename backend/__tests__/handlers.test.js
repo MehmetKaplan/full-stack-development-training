@@ -31,4 +31,23 @@ test('createUser', async () => {
 	let password = `${now}`;
 	let result = await createUser(email, password, name);
 	tickLog.info(`createUser returned:\n${JSON.stringify(result, null, 2)}`, true);
+	expect(result.payload.length).toEqual(1);
+	expect(result.payload[0]).toEqual(expect.objectContaining({
+		"email": email,
+		"name": name,
+	}))
+});
+
+test('user already exists', async () => {
+	let now = Date.now();
+	let email = `${now}@yopmail.com`;
+	let name = `${now}`;
+	let password = `${now}`;
+	let result = await createUser(email, password, name);
+	let result2 = await createUser(email, password, name);
+	tickLog.info(`createUser returned:\n${JSON.stringify(result2, null, 2)}`, true);
+	expect(result2).toEqual({
+		"result": "ERROR",
+		"payload": "userAlreadyExists"
+	});
 });
