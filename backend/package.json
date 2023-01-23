@@ -1,0 +1,17 @@
+{
+  "scripts": {
+	 "start": "node server.js",
+	 "test": "jest --runInBand --coverage --no-cache --forceExit "
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "tamed-pg": "^2.0.0",
+    "tick-log": "^1.1.4"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
